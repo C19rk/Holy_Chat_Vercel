@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Confirm Delete Group</title>
+    <link
+      rel="icon"
+      href="{% static 'images/holy-chat-favicon.png' %}"
+      type="image/png"
+    />
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>Are you sure you want to delete this group?</h1>
+      <form method="POST" action="{% url 'delete_group' group.id %}">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Yes, Delete</button>
+        <a href="{% url 'dashboard' %}" class="btn btn-secondary">Cancel</a>
+      </form>
+    </div>
+  </body>
+</html>

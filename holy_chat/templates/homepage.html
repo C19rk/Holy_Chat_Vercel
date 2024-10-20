@@ -1,0 +1,120 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Holy Chat</title>
+    <link
+      rel="icon"
+      href="{% static 'images/holy-chat-favicon.png' %}"
+      type="image/png"
+    />
+    <link
+      rel="icon"
+      href="{% static 'images/holy-chat-favicon.png' %}"
+      type="image/png"
+    />
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css"
+    />
+    <style>
+      body {
+        height: 100vh; /* Fill the viewport height */
+        display: flex; /* Use flexbox for centering */
+        flex-direction: column; /* Align items in a column */
+        justify-content: center; /* Center items vertically */
+        align-items: center; /* Center items horizontally */
+        background-color: #f8f9fa; /* Light background for contrast */
+        margin: 0; /* Remove default margin */
+      }
+
+      h1 {
+        font-size: 2.5rem; /* Large heading */
+        color: #343a40; /* Dark text color */
+        margin-bottom: 10px; /* Space below the heading */
+      }
+
+      .tagline {
+        font-size: 1.5rem; /* Smaller font for tagline */
+        color: #007bff; /* Use Bootstrap primary color */
+        margin-bottom: 20px; /* Space below the tagline */
+        white-space: nowrap; /* Prevent wrapping */
+        overflow: hidden; /* Hide overflow */
+        border-right: 0.15em solid #007bff; /* Typing cursor */
+        animation: typing 4s steps(30, end), blink-caret 0.75s step-end infinite; /* Animation for typing and cursor */
+      }
+
+      @keyframes typing {
+        from {
+          width: 0; /* Start from no width */
+        }
+        to {
+          width: 100%; /* End with full width */
+        }
+      }
+
+      @keyframes blink-caret {
+        from,
+        to {
+          border-color: transparent; /* No border color */
+        }
+        50% {
+          border-color: #007bff; /* Show border color */
+        }
+      }
+
+      a {
+        margin: 10px; /* Equal margin around links */
+        padding: 10px 20px; /* Add padding to links */
+        border-radius: 5px; /* Rounded corners */
+        background-color: #007bff; /* Bootstrap primary color */
+        color: white; /* White text color */
+        text-decoration: none; /* Remove underline */
+        transition: background-color 0.3s; /* Smooth transition for hover effect */
+      }
+
+      a:hover {
+        background-color: #0056b3; /* Darker shade on hover */
+      }
+
+      .btn {
+        margin: 10px; /* Equal margin around button */
+      }
+    </style>
+  </head>
+  <body>
+    <div style="text-align: center; margin-top: -50px">
+      <!-- Added center text alignment -->
+      <img
+        src="{% static 'images/holy-chat-logo.png' %}"
+        style="align-items: center"
+        width="350px"
+        height="auto"
+        alt="Holy Chat Logo"
+      />
+      <h1>Welcome to Holy Chat!</h1>
+      <div class="tagline">
+        Where we keep the conversations heavenly and gossip hell-free!
+      </div>
+      <div style="display: flex; justify-content: center; align-items: center">
+        {% if user.is_authenticated %}
+        <a href="{% url 'dashboard' %}" class="btn btn-primary"
+          >Return to Dashboard</a
+        >
+        {% endif %}
+        <a href="{% url 'login' %}" class="btn btn-primary">Login</a>
+        <a href="{% url 'register' %}" class="btn btn-primary">Register</a>
+        {% if user.is_authenticated %}
+        <form method="POST" action="{% url 'logout' %}" class="mb-0">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-danger">Logout</button>
+        </form>
+        {% endif %}
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,147 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Holy Creation</title>
+    <link
+      rel="icon"
+      href="{% static 'images/holy-chat-favicon.png' %}"
+      type="image/png"
+    />
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}" />
+    <style>
+      .member-list {
+        border: 1px solid #ccc;
+        max-height: 200px;
+        overflow-y: auto;
+        margin-top: 5px;
+      }
+      .member-item {
+        padding: 8px;
+        cursor: pointer;
+      }
+      .member-item:hover {
+        background-color: #f0f0f0;
+      }
+      .selected-members {
+        margin-top: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container mt-5">
+      <h2>Create Group</h2>
+      <form method="POST" action="{% url 'create_group' %}">
+        {% csrf_token %}
+        <div class="mb-3">
+          <label for="group_name" class="form-label">Group Name:</label>
+          <input
+            type="text"
+            id="group_name"
+            name="group_name"
+            class="form-control"
+            required
+          />
+        </div>
+
+        <div class="mb-3">
+          <label for="members" class="form-label"
+            >Add Members (searchable usernames):</label
+          >
+          <input
+            type="text"
+            id="memberSearch"
+            class="form-control"
+            onkeyup="filterMembers()"
+            placeholder="Search for usernames..."
+            required
+          />
+          <div id="memberList" class="member-list" style="display: none">
+            {% for user in registered_users %}
+            <div
+              class="member-item"
+              data-username="{{ user.username }}"
+              style="padding: 8px; cursor: pointer"
+              onclick="addMember('{{ user.username }}')"
+            >
+              {{ user.username }}
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+
+        <div id="selectedMembers" class="selected-members">
+          <h5>Selected Members:</h5>
+          <div id="selectedUsernamesContainer"></div>
+          <input type="hidden" name="members" id="members" value="" />
+        </div>
+
+        <button type="submit" class="btn btn-primary mt-3">Create Group</button>
+      </form>
+    </div>
+
+    <script>
+      const selectedMembers = new Set(); // Using a Set to keep unique members
+
+      function filterMembers() {
+        const input = document.getElementById("memberSearch");
+        const filter = input.value.toLowerCase();
+        const memberList = document.getElementById("memberList");
+        const items = memberList.getElementsByClassName("member-item");
+
+        // Show the member list if there is input
+        if (filter) {
+          memberList.style.display = "block";
+        } else {
+          memberList.style.display = "none";
+        }
+
+        for (let i = 0; i < items.length; i++) {
+          const username = items[i].getAttribute("data-username").toLowerCase();
+          if (username.indexOf(filter) > -1) {
+            items[i].style.display = "";
+          } else {
+            items[i].style.display = "none";
+          }
+        }
+      }
+
+      function addMember(username) {
+        selectedMembers.add(username);
+        updateSelectedMembersDisplay();
+        document.getElementById("memberSearch").value = ""; // Clear the search box
+        document.getElementById("memberList").style.display = "none"; // Hide the member list
+        updateMembersInput();
+      }
+
+      function updateSelectedMembersDisplay() {
+        const container = document.getElementById("selectedUsernamesContainer");
+        container.innerHTML = ""; // Clear existing display
+
+        selectedMembers.forEach((username) => {
+          const span = document.createElement("span");
+          span.textContent = username;
+          span.classList.add("badge", "bg-secondary", "me-2");
+          span.onclick = function () {
+            removeMember(username); // Bind remove function
+          };
+          container.appendChild(span);
+        });
+      }
+
+      function removeMember(username) {
+        selectedMembers.delete(username);
+        updateSelectedMembersDisplay();
+        updateMembersInput();
+      }
+
+      function updateMembersInput() {
+        const membersInput = document.getElementById("members");
+        membersInput.value = Array.from(selectedMembers).join(","); // Update the hidden input
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,109 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Notifications of divinity</title>
+    <link
+      rel="icon"
+      href="{% static 'images/holy-chat-favicon.png' %}"
+      type="image/png"
+    />
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}" />
+    <style>
+      body {
+        height: 100vh; /* Fill the viewport height */
+        display: flex; /* Use flexbox for centering */
+        flex-direction: column; /* Align items in a column */
+        justify-content: center; /* Center items vertically */
+        align-items: center; /* Center items horizontally */
+        background-color: #f8f9fa; /* Light background for contrast */
+        margin: 0; /* Remove default margin */
+      }
+
+      .container {
+        text-align: center; /* Center text inside the container */
+        background-color: white; /* White background for the notifications box */
+        border-radius: 8px; /* Rounded corners */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+        padding: 20px; /* Padding around content */
+        max-width: 500px; /* Maximum width for the container */
+        width: 100%; /* Full width for smaller screens */
+      }
+
+      h2 {
+        color: #343a40; /* Dark text color for the heading */
+        margin-bottom: 20px; /* Space below the heading */
+      }
+
+      ul {
+        list-style: none; /* Remove default list styling */
+        padding: 0; /* Remove default padding */
+      }
+
+      li {
+        margin: 15px 0; /* Space between list items */
+        display: flex; /* Use flexbox for button alignment */
+        justify-content: space-between; /* Space out buttons from the message */
+        align-items: center; /* Align items vertically */
+      }
+
+      button {
+        margin-left: 5px; /* Space between buttons */
+      }
+
+      .btn {
+        padding: 5px 10px; /* Padding for buttons */
+      }
+
+      /* Responsive design for smaller screens */
+      @media (max-width: 576px) {
+        .container {
+          padding: 15px; /* Less padding on smaller screens */
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h2>Notifications</h2>
+      <ul>
+        {% for notification in notifications %}
+        <li>
+          {{ notification.message }}
+          <div>
+            <form
+              method="POST"
+              action="{% url 'accept_request' notification.id %}"
+              style="display: inline"
+            >
+              {% csrf_token %}
+              <button type="submit" class="btn btn-success btn-sm">
+                Accept
+              </button>
+            </form>
+            <form
+              method="POST"
+              action="{% url 'deny_request' notification.id %}"
+              style="display: inline"
+            >
+              {% csrf_token %}
+              <button type="submit" class="btn btn-danger btn-sm">Deny</button>
+            </form>
+          </div>
+        </li>
+        {% empty %}
+        <li>No new notifications.</li>
+        {% endfor %}
+      </ul>
+      <div class="mt-4">
+        <a href="{% url 'dashboard' %}" class="btn btn-primary"
+          >Return to Dashboard</a
+        >
+        <a href="{% url 'homepage' %}" class="btn btn-secondary">Go to Home</a>
+      </div>
+    </div>
+  </body>
+</html>

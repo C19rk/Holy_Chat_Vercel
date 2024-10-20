@@ -1,0 +1,78 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Holy Invitation</title>
+    <link
+      rel="icon"
+      href="{% static 'images/holy-chat-favicon.png' %}"
+      type="image/png"
+    />
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}" />
+  </head>
+  <body>
+    <h3>{{ group.name }}</h3>
+    <p>Invite Code: <span id="inviteCode">{{ group.invite_code }}</span></p>
+    <button onclick="copyInviteCode()" class="btn btn-secondary">
+      Copy Invite Code
+    </button>
+
+    <div id="chat-messages"></div>
+    <input
+      id="chat-message-input"
+      type="text"
+      placeholder="Type a message..."
+    />
+    <button id="chat-message-submit">Send</button>
+
+    <script>
+      const groupName = "{{ group.name }}";
+      const chatSocket = new WebSocket(
+        "ws://" + window.location.host + "/ws/chat/" + groupName + "/"
+      );
+
+      chatSocket.onmessage = function (e) {
+        const data = JSON.parse(e.data);
+        document.querySelector("#chat-messages").innerHTML +=
+          data.username + ": " + data.message + "<br>";
+      };
+
+      chatSocket.onclose = function (e) {
+        console.error("Chat socket closed unexpectedly");
+      };
+
+      document.querySelector("#chat-message-input").focus();
+      document.querySelector("#chat-message-input").onkeyup = function (e) {
+        if (e.keyCode === 13) {
+          // Enter key
+          document.querySelector("#chat-message-submit").click();
+        }
+      };
+
+      document.querySelector("#chat-message-submit").onclick = function (e) {
+        const messageInputDom = document.querySelector("#chat-message-input");
+        const message = messageInputDom.value;
+        chatSocket.send(
+          JSON.stringify({
+            message: message,
+          })
+        );
+        messageInputDom.value = "";
+      };
+
+      function copyInviteCode() {
+        const inviteCode = document.getElementById("inviteCode").textContent;
+        navigator.clipboard.writeText(inviteCode).then(
+          function () {
+            alert("Invite code copied to clipboard!");
+          },
+          function (err) {
+            alert("Error copying invite code.");
+          }
+        );
+      }
+    </script>
+  </body>
+</html>

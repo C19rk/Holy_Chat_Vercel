@@ -1,0 +1,59 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Holy Logout Page</title>
+    <link
+      rel="icon"
+      href="{% static 'images/holy-chat-favicon.png' %}"
+      type="image/png"
+    />
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css"
+    />
+    <style>
+      body {
+        height: 100vh; /* Fill the viewport height */
+        display: flex; /* Use flexbox for centering */
+        flex-direction: column; /* Align items in a column */
+        justify-content: center; /* Center items vertically */
+        align-items: center; /* Center items horizontally */
+        background-color: #f8f9fa; /* Light background for contrast */
+        margin: 0; /* Remove default margin */
+      }
+
+      .message {
+        text-align: center; /* Center text */
+        margin-bottom: 20px; /* Space between message and buttons */
+      }
+
+      a {
+        margin: 10px; /* Equal margin around links */
+        padding: 10px 20px; /* Add padding to links */
+        border-radius: 5px; /* Rounded corners */
+        background-color: #007bff; /* Bootstrap primary color */
+        color: white; /* White text color */
+        text-decoration: none; /* Remove underline */
+        transition: background-color 0.3s; /* Smooth transition for hover effect */
+      }
+
+      a:hover {
+        background-color: #0056b3; /* Darker shade on hover */
+      }
+    </style>
+  </head>
+  <body>
+    <div class="message">
+      <h2>You have been logged out.</h2>
+    </div>
+    <div>
+      <a href="{% url 'homepage' %}">Go to Home</a>
+      <a href="{% url 'login' %}">Log in Again</a>
+    </div>
+  </body>
+</html>
