@@ -7,7 +7,7 @@ SECRET_KEY = 'django-insecure-slfvmc+wy60abp+3+j0k*3lm#m&ip)0wq^6swtm^2_+x%(58k2
 
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['.vercel.app']
 
 ASGI_APPLICATION = 'django_project.asgi.application'
 
